@@ -1,0 +1,160 @@
+/*
+ * 		Author: Robert Alvarez
+ * 		Date: 10-6-25
+ * 		Description: this program evaluates the glucose reading for   
+ * 					 patients with diabetes. then displays an individual 
+ * 					 report showing their glucose status. 
+ * 					 after user is done the program will display  a final report the 
+ * 					 patient with the highest GLC and the patient with the lowest GLC.
+ */
+package hw2_XC_Alvarez;
+//Import
+import java.util.Scanner;//class scanner
+public class HW2_XC_Alvarez 
+{
+	//'global' variable: visible in the class to all methods
+	static Scanner get = new Scanner(System.in);
+	static String input = " ";
+	//===========================================================
+	public static void main(String[] args) 
+	{
+			//declaration:
+				//objects: patient data
+					String ptFasting = " ";  
+					String ptName    = " "; 
+					int    ptAge     = 0  ; 
+					int    ptGlucose = 0  ;
+					String ptStatus  = " ";
+				//working variable
+					int answer           = 1;
+					int HighestGlucose   = 0;
+					int LowestGlucose    = 0;
+					String HighestPTName = " ";
+					String LowestPTName  = " ";
+			//processes:
+				while(answer == 1) //asks the user if they want to enter another patient's data
+				{
+				//input
+						ptName    = getPtName();
+						ptAge     = getPtAge();
+						ptFasting = getPtFasting();
+						ptGlucose = getPtGlucose();
+				//evaluation 
+						ptStatus  = getPtStatus(ptGlucose);
+					//process for LowestGlucose
+							if(LowestGlucose == 0) //
+							{
+								LowestGlucose = ptGlucose;
+								LowestPTName  = ptName;
+							}//end if(LowestGlucose == 0)
+							else
+								if(LowestGlucose > ptGlucose)
+							    {
+										LowestGlucose = ptGlucose;
+										LowestPTName  = ptName;
+							    }//end if(LowestGlucose > ptGlucose)	
+					//process for HighestGlucose
+							if(HighestGlucose == 0)
+							{
+								HighestGlucose = ptGlucose;
+								LowestPTName   = ptName;
+							}//end if(HighestGlucose == 0)
+							else
+								if(HighestGlucose < ptGlucose)
+								{
+									HighestGlucose = ptGlucose;
+									LowestPTName   = ptName;
+							    }//end if(HighestGlucose < ptGlucose)							
+					//report display
+						dispReport(ptFasting, ptName, ptAge, ptGlucose, ptStatus);
+					//Continue
+						System.out.println("Continue to next patient? 1 for yes & 2 for no: ");
+						input = get.nextLine();
+						answer = Integer.parseInt(input);
+						while(answer != 1 && answer != 2) //verifies user response 
+						{
+							System.out.println("Invalid response. Enter 1 for yes or 2 for no: ");
+							input = get.nextLine();
+							answer = Integer.parseInt(input);						
+						}//end while(answer != 1 && answer != 2)
+				}//end while(answer == 1)
+			//final report display
+				dispFinalReport(LowestGlucose, LowestPTName, HighestGlucose, HighestPTName);
+				
+			//goodbye
+				System.out.println("Goodbye!");
+	}//end main
+	//===========================================================
+	public static String getPtFasting()
+	{
+		   String ptFasting = " ";
+		   System.out.println("Did the patient fasted for at least 12 hours? (yes or no): ");
+		   input 	 = get.nextLine();
+		   ptFasting = input;
+		   return ptFasting; //'return' to forward back to main
+	}//end getPtFasting
+	//===========================================================
+	public static String getPtName()
+	{
+		   String ptName = " ";
+		   System.out.println("Patient's full name: ");
+		   input  = get.nextLine();
+		   ptName = input;
+		   return ptName;
+	}//end getPtName
+	//===========================================================
+	public static int getPtAge()
+	{
+		   int ptAge = 0;
+		   System.out.println("Enter age: ");
+		   input = get.nextLine();
+		   ptAge = Integer.parseInt(input);
+		   return ptAge;
+	}//end getPtAge
+	//===========================================================
+	public static int getPtGlucose()
+	{
+		   int ptGlucose = 0;
+		   System.out.println("Enter glucose reading: ");
+		   input 	 = get.nextLine();
+		   ptGlucose = Integer.parseInt(input);
+		   return ptGlucose;
+	}//end getPtGlucose
+	//===========================================================
+	public static String getPtStatus(int ptGlucose)
+	{
+		String ptStatus = " ";
+		if(ptGlucose >= 80 && ptGlucose <= 130) 
+				ptStatus = "Normal";
+			else 
+				if(ptGlucose < 80)
+					ptStatus = "Too Low";
+				else//(ptGlucose > 130
+						ptStatus = "Too High";
+		return ptStatus;
+	 }//end getPtStatus
+	//===========================================================
+	public static void dispReport(String ptFasting, String ptName, 
+	                       int ptAge, int ptGlucose, String ptStatus)
+	{
+		System.out.println("--- Patient Report ---");
+		System.out.println("- Fasted: " + ptFasting + "\n" + 
+						   "- Full name: " + ptName + "\n" +
+						   "- Age: " + ptAge + "\n" +
+						   "- Glucose reading: " + ptGlucose + "\n" +
+						   "- Glucose status: " + ptStatus);
+	} //end dispReport
+	//===========================================================
+	public static void dispFinalReport(int LowestGlucose, String LowestPTName, 
+									   int HighestGlucose, String HighestPTName)
+	{
+		System.out.println("----- Final Report -----");
+		System.out.println("Patient " + LowestPTName + " had the lowest glucose reading of " + LowestGlucose + "."); 
+		System.out.println("Patient " + HighestPTName + " had the lowest glucose reading of " + HighestGlucose + "."); 
+
+		
+	}//end dispFinalReport
+	//===========================================================
+
+
+}//end of class
