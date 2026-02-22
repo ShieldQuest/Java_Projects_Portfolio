@@ -1,7 +1,13 @@
-# Payroll Program (Java)
+# Class Practice Programs (Java)
 
-This program was developed in class by the professor, and I coded it alongside him as part of our lesson.
+These programs were written in class by the professor, and I coded them alongside him as part of the lesson.
 
-It collects employee information (SSN, name, hourly rate, hours worked), calculates gross salary, and displays a formatted report.
+Payroll Program:
+Collects employee information, calculates gross salary, and displays a report.  
+Main focus was practicing methods (modular programming), user input, calculations, and formatted output.
 
-The main focus was learning how to break a program into methods instead of writing everything inside `main`, and understanding how modular design works in Java.
+Random Program:
+Generates and displays random numbers using `Math.random()`.  
+Main focus was understanding loops and how random number generation works in Java.
+
+These exercises helped reinforce Java fundamentals and program structure.
