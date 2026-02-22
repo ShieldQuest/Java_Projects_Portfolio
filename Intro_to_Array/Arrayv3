@@ -1,0 +1,36 @@
+/*
+ * Author: COP2551
+ * Date: 9-30-25
+ * Description: this program declares an array of size 5, populates it with random integer in the range [1,100] as  input
+ *              then displays the contents back
+ */
+package arrayv3;
+
+import java.util.Scanner;
+
+public class Arrayv3 
+{
+	//declarations:
+	static Scanner get = new Scanner(System.in);
+	public static void main(String[] args) 
+	{
+		 //declarations:
+		int [] num = {0,0,0,0,0}; //same as int [] num = {0}; and also: int []  num = new int[5];
+		int i = 0;
+		//populate the array with number 9:
+		while(i < 5)
+		{
+			num[i]  = (int)(Math.random() * 100 + 1);
+			i++;
+		}//end while(i < 5)
+		//let's display the content of this array:
+		i = 0;
+		while(i < 5)
+		{
+			System.out.println("Value stored at position " + i + " is " + num[i]);
+			i++;
+		}//end while(i < 5)
+
+	}//end main
+
+}//end class Arrayv1
