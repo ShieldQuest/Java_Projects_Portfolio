@@ -1,0 +1,39 @@
+/*
+ * Author: COP2551
+ * Date: 9-30-25
+ * Description: this program moved the display to a separate method.
+ *              main() is providing a reference/address to the array to the method
+ *              for the purpose of accessing the array and printing its content.
+ *              This is a call by reference.
+ *              this version, will let the function determine the size of the array.
+ *              in the previous version, the size was 7..what if we change the size
+ *              in main()!?
+ */
+public class Arrayv5                 
+{
+	public static void main(String[] args) 
+	{
+		//declaring an int array already populated (constant):
+		int [] num = {12, 57, 34, 8, 11, 78, 65, 101};
+		int [] array = {123, 567, 890};
+		//display content in forward:
+		System.out.println("Displaying conmtent of num: ");
+		dispForward(num);//call by reference and NOT a call by value
+		System.out.println("Displaying conmtent of array: ");
+		dispForward(array);
+	}//end main
+	//========================================
+	public static void dispForward(int [] anyArray)
+	{
+		int i = 0; 
+		//while(i < 8)                   // ;//remember this problem!
+		//let's assume this function is not aware of the size:
+		while( i < anyArray.length)
+		{
+			System.out.println("Value stored at position " + i + " is " + anyArray[i]);
+			i++;
+		}//end while (i < num.length)
+	}//end dispForward
+	//=========================================
+	
+}//end class Arrayv4
