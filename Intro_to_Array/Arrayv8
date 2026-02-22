@@ -1,0 +1,74 @@
+/*
+ * Author: COP2551
+ * Date: 9-30-25
+ * Description: this program moved the display to a separate method.
+ *              main() is providing a reference/address to the array to the method
+ *              for the purpose of accessing the array and printing its content.
+ *              this version, will add a method that displays the content
+ *              backward.
+ *              this version, will code a method that searches and displays 
+ *              all even numbers and another methods that displays all odd numbers.
+ *              THis version will implement a for...loop for all processes on the array
+ *               
+ */
+public class Arrayv8                
+{
+	public static void main(String[] args) 
+	{
+		//declaring an int array already populated (constant):
+		int [] num = {12, 57, 34, 8, 11, 78, 65, 101};
+		//display content in forward:
+		System.out.println("Displaying content of num forward: ");
+		dispForward(num);
+		//display content in forward:
+		System.out.println("Displaying content of num forward: ");
+		dispBackward(num);
+		//list of even numbers in the array:
+		System.out.println("List of even numbers in the array: ");
+		findEven(num);
+		//list of odd numbers in the array:
+		System.out.println("List of odd numbers in the array: ");
+		findOdd(num);
+	}//end main
+	//========================================
+	public static void dispForward(int [] num)
+	{
+		for(int i = 0; i < num.length; i++)
+		{
+			System.out.println("Value stored at position " + i + " is " + num[i]);
+			
+		}//end for i
+	}//end dispForward
+	//=========================================
+	public static void dispBackward(int [] num)
+	{
+		for(int i = num.length - 1; i > -1; i--)
+		{
+			System.out.println("Value stored at position " + i + " is " + num[i]);
+		}//end for i
+	}//end dispBackward
+	//=========================================
+	public static void findEven(int [] num)
+	{
+		 
+		for(int i = 0; i < num.length; i++)
+		{
+			if(num[i] % 2 == 0)//remainder of num[i] by 2
+				System.out.println("Value stored at position " + i + 
+						" is " + num[i] + " and is even!");
+		}//end for i
+	}//end findEven
+	//===========================================
+	public static void findOdd(int [] num)
+	{
+		for(int i = 0; i < num.length; i++)
+		{
+			if(num[i] % 2 != 0)//remainder of num[i] by 2
+				System.out.println("Value stored at position " + i + 
+						" is " + num[i] + " and is odd!");
+			i++;
+		}//end for i
+	}//end findOdd
+	//===========================================
+	
+}//end class Arrayv4
