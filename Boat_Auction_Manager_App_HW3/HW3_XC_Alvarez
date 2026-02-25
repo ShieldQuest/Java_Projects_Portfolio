@@ -1,0 +1,255 @@
+/*
+ *   Author: Robert Alvarez
+ *   Date: 10-18-25
+ *   Description: Java console app created to help a rental-boat 
+ *   			  company decide when to action boats and at what 
+ *   			  minimum price. This version includes ArrayList 
+ *   			  and input data validation.
+ */
+package hw3_XC_Alvarez;
+//Imports
+import java.text.DecimalFormat;
+import javax.swing.JOptionPane; //for simple GUI dialog
+import java.util.ArrayList;
+
+public class HW3_XC_Alvarez 
+{
+	//Declaration
+	static String input = " ";
+	static DecimalFormat DF = new DecimalFormat("#####0.00");
+	static ArrayList<Boat> fleetList = new ArrayList<Boat>();
+	 
+	//=====================================================
+	public static void main(String[] args) 
+	{
+			//Working variables
+			int choice = 0;
+			//int BoatCount = 0; //used to track boat ************
+			String searchVIN = " ";
+			int foundAt = -1; //-1 means not found
+			
+			//Processes
+			while(choice != 4)
+			{
+				choice = menu();
+				switch(choice) //switch per user choice on the menu()
+				{
+						case 1: Boat fleet = new Boat();
+									 fleet.getVIN();
+									 fleet.getOriginalPrice();
+									 fleet.getEngineHours();
+									 fleet.getYearsInService();
+									 fleet.getToBeAuctioned();
+									 fleet.getAuctionPrice();
+									 fleet.dispReport();
+									 fleetList.add(fleet); //boat added to the fleetList folder
+									 getTotalSales();
+									 break;
+						case 2: input = JOptionPane.showInputDialog("Enter boat's VIN: ");
+									 searchVIN  = input;
+									 foundAt    = searchBoat(searchVIN);
+									 if(foundAt == -1)
+										 JOptionPane.showMessageDialog(null, searchVIN + " was not found!");
+									 else
+									 	 fleetList.get(foundAt).dispReport(); 
+									 break;
+						case 3: for(int i = 0; i < fleetList.size(); i++) //displays each boat report
+									 fleetList.get(i).dispReport();
+									 break;
+						case 4: getMinMaxAuction(); //for the minimal and maximal auctioned price in the fleet
+								JOptionPane.showMessageDialog(null, "Goodbye!");
+									 break;
+						default: JOptionPane.showMessageDialog(null, "Wrong choice. Please try again...");
+				}//end switch(choice)	
+			}//while(choice != 4)	
+	}//end main
+	//=====================================================
+	public static int menu()
+	{
+			int choice = 0;
+			input = JOptionPane.showInputDialog("Boat Action Manager\n" +
+												" -1-Add boat\n" +
+												" -2-Search for a boat\n" +
+												" -3-Display all boats\n" +
+												" -4-Quit program\n");
+			choice = Integer.parseInt(input);
+			return choice;
+	}//end menu()
+	//=====================================================
+	public static int searchBoat(String searchVIN)
+	{
+			int i = 0;
+			while(i < fleetList.size())
+			{	
+					if(searchVIN.equals(fleetList.get(i).vin)) //evaluate each boat until found by VIN
+							return i;
+					else
+							++i;//program keeps searching
+			}//end while(i < BoatCount)
+			return -1;//to mean not found
+	}//end searchBoat()
+	//=====================================================  
+	public static void getTotalSales() //completed
+	{
+			double totalSales = 0.00; 
+			int i = 0;
+			while(i < fleetList.size()) 									
+			{															
+					Boat boat = fleetList.get(i);						
+					if(boat.toBeAuctioned)		  //tracks auctionPrice amount				
+					{													
+							totalSales = totalSales + boat.auctionPrice; 
+					}//if(boat.toBeAuctioned) 
+					i++;
+			}//while(i < fleetList.size()) 
+			JOptionPane.showMessageDialog(null, "Total auction sales: $" + DF.format(totalSales));
+	}//end getTotalSales()
+	//===================================================== 
+	public static void getMinMaxAuction() 						 
+	{																
+			double Min = 0.00; 
+			double Max = 0.00; 
+			int i = 0;
+			while(i < fleetList.size()) 									
+			{															
+					Boat boat = fleetList.get(i);							
+					if(Min == 0.00)
+					{													
+								Min = boat.auctionPrice;
+					}//end if(Min == 0.00)
+					else
+					{
+							if(Min > boat.auctionPrice)  //to tracks the lowest boat auction price 
+							{
+									Min = boat.auctionPrice;
+							}//end if(Min > boat.auctionPrice)
+					}//end else
+					if(Max == 0.00)
+					{
+							Max = boat.auctionPrice;
+					}//end if(Max == 0.00)
+					else
+					{
+							if(Max < boat.auctionPrice)  //to tracks the lowest boat auction price
+							{
+									Max = boat.auctionPrice;
+							}//end if(Max < boat.auctionPrice)
+					}
+					i++;
+			}//while(i < fleetList.size()) 
+			JOptionPane.showMessageDialog(null, "Minimal auction sale: $" + DF.format(Min) +
+												"\nMaximal auction sale: $" + DF.format(Max));
+	}//end getMinMaxAuction()
+}//end class HW3_XC_Alvarez
+//=====================================================
+class Boat 
+{
+		//Declaration
+			//Object: boat
+			String  vin;
+			double  originalPrice;
+			int 	engineHours;
+			int 	yearsInService;
+			boolean toBeAuctioned;
+			double  auctionPrice;
+			double totalSales;
+			//working variables
+			DecimalFormat DF = new DecimalFormat("#####0.00");
+			String input = " ";
+		//Constructor:
+			Boat()
+			{
+					vin 			   = " ";
+					originalPrice  = 0.00;
+					engineHours    = 0;
+					yearsInService = 0;
+					toBeAuctioned  = false;
+					auctionPrice   = 0.00; 
+					totalSales 	   = 0.00;
+			}//end constructor w/o arguments
+			Boat(String vin, double originalPrice, int engineHours, 
+				 int yearsInService, boolean toBeAuctioned, double auctionPrice)
+			{
+					this.vin		        = vin;
+					this.originalPrice  = originalPrice;
+					this.engineHours    = engineHours;
+					this.yearsInService = yearsInService;
+					this.toBeAuctioned  = toBeAuctioned;
+					this.auctionPrice   = auctionPrice;
+			}//end constructor with arguments
+			//========================= Methods ============================ //WOKRING
+			void getVIN()
+			{
+					input = JOptionPane.showInputDialog("Enter VIN: ");
+					while(!checkVIN())
+					{
+							input = JOptionPane.showInputDialog("Invalid VIN! re-Enter the 12-digits for VIN: ");
+					}//end while(!checkVIN())
+					vin = input;
+			}//end getVIN()
+			//=========================
+			boolean checkVIN()
+			{
+					if(input.length() != 12)  
+						return false;
+					else
+						for(int i = 0; i < input.length(); i++)
+								if(!Character.isDigit(input.charAt(i))) //validates input is digit
+										return false;
+					return true;
+			}//end checkVIN()
+			//=========================
+			void getOriginalPrice()
+			{
+					input = JOptionPane.showInputDialog("Enter original price: $");					
+					originalPrice = Double.parseDouble(input); //validate: format '###.##' 
+			}//end getOriginalPrice()
+			//=========================
+			void getEngineHours()
+			{
+					input = JOptionPane.showInputDialog("Enter engine hours: ");
+					engineHours = Integer.parseInt(input); //validate: integer
+			}//end engineHours()
+			//=========================
+			void getYearsInService()
+			{
+					input = JOptionPane.showInputDialog("Enter years in service: ");
+					yearsInService = Integer.parseInt(input); //validate: integer
+			}//end yearsInService()
+			//=========================
+			void getToBeAuctioned() //evaluates if auctioned
+			{
+					if((yearsInService > 5 && engineHours >= 1500) || (yearsInService > 10))
+							toBeAuctioned = true;
+					else
+							toBeAuctioned = false;
+			}//end toBeAuctioned()
+			//=========================
+			void getAuctionPrice()
+			{
+					if(toBeAuctioned == true)
+							auctionPrice = 0.25 * originalPrice;						
+			}//end getAuctionPrice()			
+			//=========================	 
+			void dispReport()
+			{
+					//Used string as memory to store set data
+					String dispReport = "Boat VIN: " + vin +								
+										"\n-Original Price: $" + DF.format(originalPrice) +  
+										"\n-Engine Hours: " + engineHours +					
+										"\n-Years in service: " + yearsInService;			
+					//from boolean to String 
+					if(toBeAuctioned == true)												
+					{
+						dispReport = dispReport + "\n-Auction: To be auctioned" +				
+												  "\n-Auction Price: $" + DF.format(auctionPrice); 
+					}//end if(toBeAuctioned == true)
+					else
+					{
+						dispReport = dispReport + "\n-Auction: Not to be auctioned" +
+												  "\n-Auction Price: $" + DF.format(auctionPrice);
+					}//end else
+					//display String					
+					JOptionPane.showMessageDialog(null, dispReport);
+			}//end dispReport() 			
+}//end Boat class
