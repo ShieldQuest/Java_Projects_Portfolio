@@ -1,0 +1,87 @@
+/*
+	Author: COP2551C
+	Date: 10-7-25
+	Description:  
+*/
+
+//Imports:
+import java.util.Scanner;
+import javax.swing.JOptionPane; //needed for simple GUI dialogs
+public class AdditionGUI 
+{
+	//"global" vars:
+	static Scanner get = new Scanner(System.in);  
+	static String input = " ";
+	public static void main(String[] args) 
+	{
+		 //declarations:
+			//addition: 
+				int a = 0;
+				int b = 0;
+				int s = 0;
+			//working variables:
+				//int answer = 1;
+				int answer = JOptionPane.YES_OPTION;
+		//processes:
+		//while(answer == 1)
+				while(answer == JOptionPane.YES_OPTION)
+		{
+			//input:
+			a = getA();
+			b = getB();
+			//processes: adding a to b and storing result in s
+				s = add(a, b); 
+			//output:
+				disp(a, b, s);
+			//another addition?
+			//System.out.println("Another addition? 1 for yes or 0 for no: ");
+			//answer = get.nextInt();
+			answer = JOptionPane.showConfirmDialog(null, "Another addition?", "Confirm", JOptionPane.YES_NO_OPTION);
+			/*while(answer != 1 && answer != 0)
+			{
+				System.out.println("Another addition? 1 for yes or 0 for no: ");
+				answer = get.nextInt();
+			}//end while(answer != 1 && answer != 0) */      
+		}//end while(answer == 1)
+		//System.out.println("Goodbye!");
+		JOptionPane.showMessageDialog(null, "Goodbye!");
+		//closing the scanner:
+			get.close(); 
+	}//end main
+	//=====================================================================
+	public static int getA()
+	{
+		int a = 0;
+		//System.out.println("Enter a: ");
+		//a = get.nextInt();
+		input = JOptionPane.showInputDialog("Enter a: ");
+		a = Integer.parseInt(input);
+		return a;
+	}//end getA
+	//======================================================================
+	public static int getB()
+	{ 
+		int b = 0;
+		//System.out.println("Enter b: ");
+		//b = get.nextInt();
+		input = JOptionPane.showInputDialog("Enter b: ");
+		b = Integer.parseInt(input);
+		return b;
+	}//end getB
+	//======================================================================
+	public static int add(int a, int b)  
+	{
+		int s = 0; 
+		s = a + b;
+		return s; 
+	}//end add
+	//=====================================================================
+	 
+	public static void disp(int a, int b, int s)
+	{
+		//System.out.println("The sum of " + a + " and " + b + " is " + s);
+		JOptionPane.showMessageDialog(null, "The sum of " + a + " and " + b + " is " + s);
+	}//end disp
+	//======================================================================
+}//end class Addition
+ 
