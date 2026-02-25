@@ -1,19 +1,14 @@
-# Java Projects Portfolio
+# Java Learning Repository
 
-This repository is my workspace for learning and practicing Java. It brings together class exercises, personal projects, and small experiments as I build my skills with object-oriented programming, data handling, and core development techniques.
+This repository contains programs I worked on while learning Java.
 
-I’ll continue using this space to stay organized, refine my work, and track my progress as I grow more confident with Java.
+Most of these were coded in class alongside my professor as part of lectures and live demonstrations. Others are homework assignments and additional practice that I completed on my own.
 
-Focus Areas
+I use this space to keep everything organized and to track how my understanding of Java is improving over time.
 
- - Object-oriented programming
-
- - Class design and inheritance
-
- - Input validation and user interaction
-
- - Working with collections
-
- - Basic file handling
-
- - General programming practice
+Main topics covered:
+- Object-oriented programming
+- Methods and modular design
+- Arrays and collections
+- Input validation and user interaction
+- Basic file handling
