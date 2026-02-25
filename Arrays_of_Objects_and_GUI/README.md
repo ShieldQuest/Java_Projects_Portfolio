@@ -1,4 +1,4 @@
-# Java Practice Programs
+# Payroll, Strings, and GUI Practice
 
 These are different programs I worked on during class.
 
