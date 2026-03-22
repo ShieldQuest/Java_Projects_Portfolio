@@ -1,0 +1,86 @@
+/*
+ * Author: COP2551
+ * Date: 9-22-25
+ * Description: see full specs in Canvas
+ *              this version implement all XC's
+ */
+package hw1_xc_sol;
+//Imports:
+import java.util.Scanner;
+
+public class HW1_XC_SOL 
+{
+	//global declarations within the class:
+	static Scanner get  = new Scanner(System.in);
+	public static void main(String[] args) 
+	{
+		//declarations:
+			//object: weather for a city
+			String City  = " ";
+			int Temp     = 0;
+			int Season = 0; //1 for summer and 0 for winter
+			//working variables:
+			int answer   = 1;
+			String input = " ";
+		//processes:
+		while(answer == 1)
+		{
+			//input:
+			System.out.println("Enter the name of this city: ");
+			input = get.nextLine();
+			City = input;
+			System.out.println("Is it Summer or Winter? enter 1 for summer or 0 for winter: ");
+			input = get.nextLine();
+			Season = Integer.parseInt(input);
+			while(Season != 1 && Season != 0)
+			{
+				System.out.println("Wrong code for the season! enter 1 for summer or 0 for winter: ");
+				input = get.nextLine();
+				Season = Integer.parseInt(input);
+			}//end while(Season != 1 && Season != 0)
+			System.out.println("Enter outdoor temperature in degrees Fahrenheit: ");
+			input = get.nextLine();
+		    Temp = Integer.parseInt(input);
+		    //evaluate and report
+		    if(Season == 1) //1 means summer
+		    {
+			    System.out.println("City Name: " + City);
+			    System.out.println("Season: Summer.");
+			    if(Temp < 85)
+			    	System.out.println("GREEN alert!");
+			    else
+			    	if(Temp >= 85 && Temp <= 95)  
+			    		System.out.println("YELLOW alert!");
+			    	else //Temp > 95
+			    		System.out.println("RED alert! Heat Wave");
+		    }//end if(Season == 1)
+		    else //Season == 0 ==>winter
+		    {
+		    	System.out.println("City Name: " + City);
+			    System.out.println("Season: Winter.");
+			    if(Temp > 50)
+			    	System.out.println("GREEN alert!");
+			    else
+			    	if(Temp >= 35 && Temp <= 50)  
+			    		System.out.println("YELLOW alert!");
+			    	else //Temp < 35
+			    		System.out.println("RED alert! Freezing Temp");
+		    	
+		    }//end else if(Season == 1)
+		    //continue
+		    System.out.println("Another entry? 1 for yes or 0 for no: ");
+		    input = get.nextLine();
+		    answer =  Integer.parseInt(input);
+		    while(answer != 1 && answer != 0)
+		    {
+			    System.out.println("Wrong answer! re-enter 1 for yes or 0 for no: ");
+			    input = get.nextLine();
+			    answer =  Integer.parseInt(input);
+		    }//end while(answer != 1 && answer != 0)
+		}//end while(answer == 1)
+		//close scanner:
+		get.close();
+		//goodbye!
+		System.out.println("Goodbye!");
+	}//end main
+}//end class HW1_SOL
