@@ -1,0 +1,30 @@
+/*
+ * Author: COP2551
+ * Date: 9-30-25
+ * Description: this program moved the display to a separate method.
+ *              main() is providing a reference/address to the array to the method
+ *              for the purpose of accessing the array and printing its content.
+ *              This is a call by reference
+ */
+public class Arrayv4                  
+{
+	public static void main(String[] args) 
+	{
+		//declaring an int array already populated (constant):
+		int [] num = {12, 57, 34, 8, 11, 78, 65};
+		//display content in forward:
+		dispForward(num);//call by reference and NOT a call by value
+	}//end main
+	//========================================
+	public static void dispForward(int [] num)
+	{
+		int i = 0; 
+		while(i < 7)                   // ;//remember this problem!
+		{
+			System.out.println("Value stored at position " + i + " is " + num[i]);
+			i++;
+		}//end while (i < 7)
+	}//end dispForward
+	//=========================================
+	
+}//end class Arrayv4
