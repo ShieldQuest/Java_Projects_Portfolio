@@ -1,0 +1,145 @@
+/*
+ *	Author: Robert Álvarez
+ *	Date: 
+ *	Description: this program registers new members for the 
+ *				 Flying Club of America (FCA), a fictional non-profit 
+ *				 organization that brings pilots together, promotes safe 
+ *				 flying, and supports aviation education. It collects 
+ *				 member information, assigns each person to either the 
+ *				 Professional Pilot category or the Amateur Pilot category, 
+ *				 and helps the FCA manage all registered members. 
+ *
+ */ 
+package project_Alvarez;
+
+import javax.swing.JOptionPane;
+
+public class project_Alvarez 
+{
+
+	public static void main(String[] args) 
+	{
+
+	}//end main
+
+}//end class project_Alvarez
+//=============== CLASS ===============
+class Membership
+{
+	//declaration:
+			//objects
+					String id;
+					String category;
+					double fees;
+					String city;
+					String state;
+					String phone;
+					String email;
+			//working variable
+					String input = " ";
+	//constructors:
+			Membership()
+			{
+					id 		 = " ";
+					category = " ";
+					fees 	 = 0.0;
+					city 	 = " ";
+					state 	 = " ";
+					phone 	 = " ";
+					email 	 = " ";
+			}//end constructor w/o arguments
+			Membership(String id, String category, double fees, String city, String state, String phone, String email)
+			{
+					this.id 	  = id;
+					this.category = category;
+					this.fees 	  = fees;
+					this.city 	  = city;
+					this.state 	  = state;
+					this.phone 	  = phone;
+					this.email 	  = email;
+			}//end constructor w/ arguments
+			//================== Method ==================
+			void getMemberData()
+			{
+					input = JOptionPane.showInputDialog("Enter membership ID: ");
+						id 	 	 = input;
+					input = JOptionPane.showInputDialog("Enter category: ");
+						category = input;
+					input = JOptionPane.showInputDialog("Enter city: ");
+						city 	 = input;
+					input = JOptionPane.showInputDialog("Enter state: ");
+						state 	 = input;
+					input = JOptionPane.showInputDialog("Enter phone number: ");
+						phone	 = input;
+					input = JOptionPane.showInputDialog("Enter email: ");
+						email 	 = input;
+			}//end getMemberData
+			void dispMember()
+			{
+					JOptionPane.showMessageDialog(null, "==== Member ====" 			  + "\n" +
+														"Membership ID: "  + id   	  + "\n" +
+														"  Category: "	   + category + "\n" + 
+														"  City : " 	   + city 	  + "\n" +
+														"  State:" 		   + state 	  + "\n" +
+														"  Phone Number: " + phone 	  + "\n" + 
+														"  Email: " 	   + email 	  + "\n");
+			}//end dispMember
+}//end class Membership
+//=============== SUBCLASS ===============
+class Professional extends Membership
+{
+		//declarations:
+				//object
+						String airline;
+						String firstName;
+						String lastName;
+						String licenseNumber;
+						int	   totalFlightHours;
+						String aircraftType;
+						String companyWebsite;
+				//working variable
+						String input = " ";
+		//constructors:
+				Professional()
+				{
+						super();
+						airline = " ";
+						firstName = " ";
+						lastName = " ";
+						licenseNumber = " ";
+						totalFlightHours = 0;
+						aircraftType = " ";
+						companyWebsite = " ";
+				}//end constructor w/o arguments
+				Professional(String airline, String firstName, String lastName, String licenseNumber, int totalFlightHours, String aircraftType, 
+							 String companyWebsite, String id, String category, double fees, String city, String state, String phone, String email)
+				{
+						super(id, category, fees, city, state, phone, email);
+						this.airline = airline;
+						this.firstName = firstName;
+						this.lastName = lastName;
+						this.licenseNumber = licenseNumber;
+						this.totalFlightHours = totalFlightHours;
+						this.aircraftType = aircraftType;
+						this.companyWebsite = companyWebsite;
+				}//end constructor w/ arguments
+				//================== Method ==================
+				void getProfessionalData()
+				{
+							input = JOptionPane.showInputDialog("Enter airline: ");
+								airline   = input;
+							input = JOptionPane.showInputDialog("Enter first name: ");
+								firstName = input;
+							input = JOptionPane.showInputDialog("Enter last name: ");
+								lastName  = input;
+							input = JOptionPane.showInputDialog("Enter professional license number: ");
+								licenseNumber  = input;
+							input = JOptionPane.showInputDialog("Enter total flight hours: ");
+								totalFlightHours = Integer.parseInt(input);
+							input = JOptionPane.showInputDialog("Enter aircraft type: ");
+								aircraftType = input;
+							input = JOptionPane.showInputDialog("Enter airline: ");
+								companyWebsite = input;
+				}//end getMemberData												
+}//end class Professional
+
