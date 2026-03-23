@@ -1,0 +1,1075 @@
+/*
+ *	Author: 	 Robert Álvarez
+ *	Date: 		 12-1-25				//date postponed from 11-30-25 to 12-1-25
+ *	Description: this program manages members of the Flying Club of America (FCA), 
+ *				 a fictional non-profit organization that brings pilots together. 
+ *				 It collects member information, assigns each person as either a 
+ *				 professional pilot or the amateur pilot, has search capabilities
+ *				 and saved data into a file.
+ */ 
+package project_XC_Alvarez;
+//imported
+import javax.swing.JOptionPane;
+import java.text.DecimalFormat;
+import java.util.ArrayList;
+import java.io.FileInputStream;
+//File handling imports
+import java.io.FileOutputStream;
+import java.io.ObjectOutputStream;
+import java.io.IOException;
+import java.io.ObjectInputStream;
+import java.io.Serializable;
+
+public class Project_XC_Alvarez 
+{
+	//declaration: 
+			//objects
+					static ArrayList<Professional> professionalList = new ArrayList<Professional>();
+					static ArrayList<Amateur> amateurList 			= new ArrayList<Amateur>();
+			//working variables
+					static String input = " ";
+	public static void main(String[] args)  throws IOException, ClassNotFoundException
+	{
+			//declaration:
+					//objects
+					int mainMenu 		  = 0  ;
+					int registrationMenu  = 0  ;		
+					int searchMenu 	  	  = 0  ;
+					int start			  = 0  ;		//to start the program
+					String searchID 	  = " ";
+					int proFoundAt 		  = -1 ;		
+					int amateurFoundAt	  = -1 ;
+			//processes:
+					start = JOptionPane.showConfirmDialog(null, "Flying Club of America Registration Program!\n" +																							
+																"\nBegin? ", "Confirm", JOptionPane.YES_NO_OPTION);
+					if(start == JOptionPane.NO_OPTION)
+					{
+							JOptionPane.showMessageDialog(null, "Thank you for using this app!");
+					}//end if start
+					else
+					{
+							while(mainMenu != 3)
+							{
+									mainMenu = getMainMenu();
+									switch(mainMenu)
+									{
+											//----------------------------------------------------------------------------
+											case 1: while(registrationMenu != 3)
+													{
+															registrationMenu = getRegistrationMenu();
+															switch(registrationMenu)
+															{
+																	case 1: Professional pro = new Professional();
+																			pro.getProfessionalData();
+																			professionalList.add(pro); //.add
+																			pro.dispProfessional(); 
+																			break;
+																	//---------------------------------------
+																	case 2: Amateur amateur = new Amateur();
+																			amateur.getAmateurData();
+																			amateurList.add(amateur);
+																			amateur.dispAmateur();
+																			break;
+																	//---------------------------------------
+																	case 3: JOptionPane.showMessageDialog(null, "Back to main menu!");
+																			break;
+																   default: JOptionPane.showMessageDialog(null, "Invalid option!");
+															}//end switch registrationMenu
+													}//end while registrationMenu
+													registrationMenu = 0;
+													break;
+											//----------------------------------------------------------------------------
+											case 2: while(searchMenu != 3)
+													{
+															searchMenu = getSearchMenu();
+															switch(searchMenu)
+															{
+																	case 1: if(professionalList.isEmpty())
+																			{
+																					JOptionPane.showMessageDialog(null, "Database is empty!");
+																			}//end if 
+																			else
+																			{
+																					input = JOptionPane.showInputDialog("Enter the 10-digit 'member ID' + 'P': ");
+																					while(!checkSearchID(input))
+																					{
+																							input = JOptionPane.showInputDialog("Invalid! re-Enter the 10-digit 'member ID' + 'P': ");
+
+																					}//end while
+																					//---------------------------------------
+																					searchID = input;
+																					proFoundAt = searchProfessional(searchID);
+																					//---------------------------------------
+																					if(proFoundAt == -1)
+																					{
+																							JOptionPane.showMessageDialog(null, searchID + " was not found!");
+																					}//end if
+																					//---------------------------------------
+																					else
+																					{
+																							professionalList.get(proFoundAt).dispProfessional();
+																					}//end else
+																			}//end else
+																			break;
+																	//--------------------------------------------------------------------------------------------------------------
+																	case 2: if(amateurList.isEmpty())
+																			{
+																					JOptionPane.showMessageDialog(null, "Database is empty!");
+																			}//end if
+																			//----------------------------------------------------------------
+																			else
+																			{
+																					input = JOptionPane.showInputDialog("Enter the 10-digit 'member ID' + 'A': ");
+																					while(!checkSearchID(input))
+																					{
+																							input = JOptionPane.showInputDialog("Invalid! re-Enter the 10-digit 'member ID' + 'A': ");
+
+																					}//end while
+																					//---------------------------------------
+																					searchID = input;
+																					amateurFoundAt = searchAmateur(searchID);
+																					//---------------------------------------
+																					if(amateurFoundAt == -1)
+																					{
+																							JOptionPane.showMessageDialog(null, searchID + " was not found!");
+																					}//end if
+																					//---------------------------------------
+																					else
+																					{
+																							amateurList.get(amateurFoundAt).dispAmateur();
+																					}//end else
+																			}//end else
+																			break;
+																			//--------------------------------------------------------------------------------------------------------------
+																	case 3: JOptionPane.showMessageDialog(null, "Back to main menu!");
+																			break;
+																   default:	JOptionPane.showMessageDialog(null, "Invalid option!");									
+															}//end switch searchMenu
+													}//end while searchMenu
+													searchMenu = 0;
+													break;
+											//----------------------------------------------------------------------------
+											case 3: //Write Professional ---------------------------------------
+													JOptionPane.showMessageDialog(null, "All records saved to file!");
+													try
+													(
+															FileOutputStream outFile = new FileOutputStream("professionals.dat");
+															ObjectOutputStream outObject = new ObjectOutputStream(outFile);
+													)
+													{
+															for(int i = 0; i < professionalList.size(); i++)
+															{
+																	outObject.writeObject(professionalList.get(i));
+															}//end for
+													}//end try
+													//Write Amateur ---------------------------------------
+													try
+													(
+															FileOutputStream outFile = new FileOutputStream("amateurs.dat");
+															ObjectOutputStream outObject = new ObjectOutputStream(outFile);
+													)
+													{
+															for(int i = 0; i < amateurList.size(); i++)
+															{
+																	outObject.writeObject(amateurList.get(i));
+															}//end for
+													}//end try 
+													//Read Professional ---------------------------------------
+													JOptionPane.showMessageDialog(null, "All records saved to file!");
+													try
+												    (
+												    		FileInputStream inFile = new FileInputStream("professionals.dat");
+															ObjectInputStream inObject = new ObjectInputStream(inFile);
+												    )
+												    {
+												        	ArrayList<Professional> readProList = new ArrayList<Professional>();
+												        	Professional readPro = new Professional();
+															//---------------------------------------
+													        while(inFile.available() > 0)
+													        {
+													            	readPro = (Professional)inObject.readObject();
+													            	readProList.add(readPro);
+													        }
+													        //---------------------------------------
+													        JOptionPane.showMessageDialog(null, "Displaying professional records!");
+													        for(int j = 0; j < readProList.size(); j++)
+													        {
+													        		readProList.get(j).dispProfessional();
+													        }//end for
+												    }//end try
+													//Read Amateur ---------------------------------------
+													try
+												    (
+												    		FileInputStream inFile = new FileInputStream("amateurs.dat");
+															ObjectInputStream inObject = new ObjectInputStream(inFile);
+												    )
+												    {
+													        ArrayList<Amateur> readAmList = new ArrayList<Amateur>();
+													        Amateur readAm = new Amateur();
+															//---------------------------------------
+	
+													        while(inFile.available() > 0)
+													        {
+													            readAm = (Amateur)inObject.readObject();
+													            readAmList.add(readAm);
+													        }
+															//---------------------------------------
+													        JOptionPane.showMessageDialog(null, "Displaying professional records!");
+													        for(int j = 0; j < readAmList.size(); j++)
+													        {
+													        		readAmList.get(j).dispAmateur();
+													        }//end for
+												    }//end try
+													JOptionPane.showMessageDialog(null, "Thank you for using this app!");
+													break;
+											//----------------------------------------------------------------------------
+										   default: JOptionPane.showMessageDialog(null, "Invalid option!");
+											//----------------------------------------------------------------------------
+									}//end switch mainMenu
+							}//end while mainMenu
+					}//end else start
+	}//end main
+	//Menu Method ========================================================== 
+			public static int getMainMenu()
+			{
+					int mainMenu 	  = 0;
+					String mainPrompt = "Main Menu:" 			  + "\n" +
+										"-----------------------" + "\n" +
+										"-1-Register a member"    + "\n" +
+										"-2-Search for a member"  + "\n" +
+										"-3-Quit program"		  + "\n" +
+										"\t\tEnter option 1-3: ";
+					input = JOptionPane.showInputDialog(mainPrompt);
+					//-------------------------------
+					while(!checkSelection(input))
+					{
+							JOptionPane.showMessageDialog(null, "Invalid option!");
+							input = JOptionPane.showInputDialog(mainPrompt);
+					}//end while
+					//-------------------------------
+					mainMenu = Integer.parseInt(input);
+					return mainMenu;
+			}//end getMainMenu()
+			//----------------------------------------------------------------------------
+			public static int getRegistrationMenu()
+			{
+					int registrationMenu 	  = 0;
+					String registrationPrompt = "Registration Menu:" 	  + "\n" +
+												"-----------------------" + "\n" +
+												"-1-Professional Pilot"   + "\n" +
+												"-2-Amateur Pilot"  	  + "\n" +
+												"-3-Go back to main menu" + "\n" +
+												"\t\tEnter option 1-3: ";
+					input = JOptionPane.showInputDialog(registrationPrompt);
+					//-------------------------------
+					while(!checkSelection(input))
+					{
+							JOptionPane.showMessageDialog(null, "Invalid option!");
+							input = JOptionPane.showInputDialog(registrationPrompt);
+					}//end while
+					//-------------------------------
+					registrationMenu = Integer.parseInt(input);
+					return registrationMenu;
+			}//end getRegistrationMenu()
+			//----------------------------------------------------------------------------
+			public static int getSearchMenu()
+			{
+					int searchMenu 	  = 0;
+					String searchPrompt = "Search Menu:" 			+ "\n" +
+										  "-----------------------" + "\n" +
+										  "-1-Professional Pilot"   + "\n" +
+										  "-2-Amateur Pilot"        + "\n" +
+										  "-3-Go back to main menu"	+ "\n" +
+										  "\t\tEnter option 1-3: ";
+					input = JOptionPane.showInputDialog(searchPrompt);
+					//-------------------------------
+					while(!checkSelection(input))
+					{
+							JOptionPane.showMessageDialog(null, "Invalid option!");
+							input = JOptionPane.showInputDialog(searchPrompt);
+					}//end while
+					//-------------------------------
+					searchMenu = Integer.parseInt(input);
+					return searchMenu;
+			}//end getSearchMenu()
+	//Search Method ========================================================== 
+			public static int searchProfessional(String searchID)
+			{
+					int i = 0;
+					while(i < professionalList.size())
+					{
+							if(searchID.equalsIgnoreCase(professionalList.get(i).id))
+							{
+									return i;
+							}//end if
+							else
+							{
+									++i;
+							}//end else
+					}//end for
+					return -1;
+			}//end searchProfessional
+			//----------------------------------------------------------------------------
+			public static int searchAmateur(String searchID)
+			{
+					int i = 0;
+					while(i < amateurList.size())
+					{
+							if(searchID.equalsIgnoreCase(amateurList.get(i).id))
+							{
+									return i;
+							}//end if
+							else
+							{
+									++i;
+							}//end else
+					}//end for
+					return -1;
+			}//end searchProfessional
+	//Validation Method ======================================================== 
+			public static boolean checkSelection(String input)
+			{
+					if(input.isEmpty())
+					{
+							return false;
+					}//end if
+					//-------------------------------
+					for(int i = 0; i < input.length(); i++)
+					{
+							if(!Character.isDigit(input.charAt(i)))  //if not digit
+							{
+									return false;
+							}//end if
+					}//end for 1
+					return true;
+			}//end checkSelection
+			//----------------------------------------------------------------------------
+			public static boolean checkSearchID(String input)
+			{
+					if(input.isEmpty())
+					{
+							return false;
+					}//end if
+					//-------------------------------------
+					if(input.length() != 11)
+					{
+							return false;
+					}//end if
+					//-------------------------------------
+					for(int i = 0; i < input.length(); i++)
+					{
+							if(!Character.isLetter(input.charAt(i)) && !Character.isDigit(input.charAt(i)) )  //if not digit
+							{
+									return false;
+							}//end if digit
+					}//end for 1
+					return true;
+			}//end checkSearchID				
+}//end class Project_XC_Alvarez
+//Class ========================================================== 
+class Membership implements Serializable
+{
+	//declaration:
+			//objects
+			String id;
+			int    category;	//1 for life, 2 for regular
+			String categoryText;
+			double fees;
+			String city;
+			String state;
+			String phone;
+			String email;
+			//working variable
+			String input 	   = " ";
+			DecimalFormat DF   = new DecimalFormat("###,##0.00");
+			USstates stateList = new USstates();	//calling our USstates list class
+			//FeeSchedule FS = new FeeSchedule		
+	//constructors:
+			Membership()
+			{
+					id 		 	 = " ";
+					category 	 = 0  ;
+					categoryText = " ";
+					fees 	 	 = 0.0;
+					city 	 	 = " ";
+					state 	 	 = " ";
+					phone 	 	 = " ";
+					email 	 	 = " ";
+			}//end constructor w/o arguments
+			Membership(String id, int category, double fees, String city, String state, String phone, String email)
+			{
+					this.id 	  = id;
+					this.category = category;
+					this.fees 	  = fees;
+					this.city 	  = city;
+					this.state 	  = state;
+					this.phone 	  = phone;
+					this.email 	  = email;
+			}//end constructor w/ arguments
+	//Input Method ========================================================== 
+			void getMemberData()
+			{
+					input = JOptionPane.showInputDialog("Enter 10-digit membership ID: ");
+							while(!checkID(input))
+							{
+									input = JOptionPane.showInputDialog("Invalid! re-Enter 10-digit membership ID: ");
+							}//end while
+							id 			  = input;
+					//---------------------------------------------------------------------------------------------------
+					input = JOptionPane.showInputDialog("Enter category 1 for life or 2 for regular: ");
+							while(!checkCategory(input))
+							{
+									input = JOptionPane.showInputDialog("Invalid! choose 1 for life or 2 for regular: ");
+							}//end while
+							category 	  = Integer.parseInt(input);	
+							//-------------------------------------
+							if(category == 1)
+							{
+									categoryText = "Life";
+							} 
+							else if(category == 2)
+							{
+									categoryText = "Regular";
+							}
+					//---------------------------------------------------------------------------------------------------
+					input = JOptionPane.showInputDialog("Enter city: ");
+							while(!checkSpaceLetter(input))
+							{
+									input = JOptionPane.showInputDialog("Invalid! re-Enter city: ");
+							}//end while
+							city 	 	  = input;
+					//---------------------------------------------------------------------------------------------------
+					input = JOptionPane.showInputDialog("Enter state: ");
+							while(!checkSpaceLetter(input))
+							{
+									input = JOptionPane.showInputDialog("Invalid! re-Enter state: ");
+							}//end while
+						state 	 		  = stateList.getState(input);
+					//---------------------------------------------------------------------------------------------------
+					input = JOptionPane.showInputDialog("Enter phone number (digits only): ");
+							while(!checkDigit(input))
+							{
+									input = JOptionPane.showInputDialog("Invalid! re-Enter phone number (digits only): ");
+							}//end while
+							phone	 	  = input;
+					//---------------------------------------------------------------------------------------------------
+					input = JOptionPane.showInputDialog("Enter email (e.i. xzy@company.com): ");
+							while(!checkEmail(input))
+							{
+									input = JOptionPane.showInputDialog("Invalid! re-Enter email (e.i. xzy@company.com): ");
+							}//end while
+							email 	 	  = input;
+			}//end getMemberData			
+	//Fee Method ============================================================ 
+			void setProFees(FeeSchedule FS) 	//calling FeeSchedule class FS
+			{
+					if(category == 1)			//life
+					{
+							fees = FS.proLife;
+					}//end if category
+					else if(category == 2)		//regular
+					{
+							fees = FS.proRegular;
+					}//end else if
+			}//end setFees
+			//-------------------------------
+			void setAmFees(FeeSchedule FS)
+			{
+					if(category == 1)			//life
+					{
+							fees = FS.amLife;
+					}//end if category
+					else if(category == 2)		//regular
+					{
+							fees = FS.amRegular;
+					}//end else if
+			}//end getAmFees
+	//Display Method ==========================================================
+			void dispMember()
+			{
+					JOptionPane.showMessageDialog(null, "Membership Information:\n" 	   +
+														"--------------------------------" + "\n" +
+														"ID: 		   " + id   	  	   + "\n" +
+														"Category: 	   " + categoryText    + "\n" + 
+														"Fees: 		  $" + DF.format(fees) + "\n" +
+														"City : 	   " + city 	  	   + "\n" +
+														"State: 	   " + state 	  	   + "\n" +
+														"Phone Number: " + phone		   + "\n" + 
+														"Email: 	   " + email 	  	   + "\n");
+			}//end dispMember
+	//Validation Method ======================================================== 
+			boolean checkID(String input)
+			{
+					if(input.isEmpty())
+					{
+							return false;
+					}//end if
+					//-------------------------------
+					if(input.length() != 10) //confirm 10 characters
+					{
+							return false;
+					}//end if length
+					//-------------------------------
+					for(int i = 0; i < 9; i++)	//are first 9 characters digits?
+					{
+							if(!Character.isDigit(input.charAt(i)))
+							{
+									return false;
+							}//end if not digit
+					}//end for i
+					return true;
+			}//end checkID
+			//------------------------------------------------------------------------
+			boolean checkCategory(String input)
+			{
+					if(input.isEmpty())
+					{
+							return false;
+					}//end if
+					//-------------------------------
+					if(input.length() != 1)
+					{
+							return false;
+					}//end if length
+					//-------------------------------
+					for(int i = 0; i < 1; i++)
+					{
+							if(!Character.isDigit(input.charAt(i)))
+							{
+									return false;
+							}//end if not digit
+					}//end for i
+					//-------------------------------
+					if(!input.equals("1") && !input.equals("2"))	//making strict rule
+					{
+							return false;
+					}//end if
+					return true;			
+			}//end checkCategory
+			//------------------------------------------------------------------------
+			boolean checkSpaceLetter(String input)
+			{
+					if(input.isEmpty())
+					{
+							return false;
+					}//end if
+					//-------------------------------
+					for(int i = 0; i < input.length(); i++)
+					{
+							if(!Character.isLetter(input.charAt(i)) && input.charAt(i) != ' ') //letters & space (' ') accepted
+							{
+									return false;
+							}//end if
+					}//end for i
+					return true;
+			}//end checkCity
+			//------------------------------------------------------------------------
+			boolean checkDigit(String input)
+			{
+					if(input.isEmpty())
+					{
+							return false;
+					}//end if
+					//-------------------------------
+					if(input.length() != 10)
+					{
+							return false;
+					}//end if length
+					//-------------------------------
+					for(int i = 0; i < input.length(); i++)
+					{
+							
+							if(!Character.isDigit(input.charAt(i)))
+							{
+									return false;
+							}//end if not letter
+					}//end for i
+					return true;
+			}//end checkState
+			//------------------------------------------------------------------------
+			boolean checkEmail(String input) //creating email rules test
+			{
+					int atCount  = 0;  //atCount = @ count
+					int dotCount = 0;
+					//-------------------------------
+					if(input.isEmpty())
+					{
+							return false;
+					}//end if
+					//-------------------------------					
+					for(int i = 0; i < input.length(); i++)		//to only accept letters, '@', and '.' (i.e. email@mail.com)
+					{
+							if(!Character.isLetter(input.charAt(i)) && input.charAt(i) != '@' && input.charAt(i) != '.')
+							{
+								return false;
+							}//end if no '@' and '.'
+					}//end for i 
+					//----------------------------------------------------
+					for(int i = 0; i < input.length(); i++)		//count how many '@'
+					{
+							if(input.charAt(i) == '@')			//charAt for character at position (i)  
+							{
+									atCount++;	//adds 1
+							}//end if atCount
+					}//end for i
+					//----------------------------------------------------
+					for(int i = 0; i < input.length(); i++)		//count how many '.'
+					{
+							if(input.charAt(i) == '.')
+							{
+									dotCount++;
+							}
+					}//end for i
+					//----------------------------------------------------
+					if(atCount != 1)							//we only accept one '@' symbol
+					{
+							return false;
+					}//end if atCount
+					//----------------------------------------------------
+					if(dotCount != 1)							//we only accept one '.' symbol
+					{
+							return false;
+					}//end if atCount
+					//----------------------------------------------------
+					if(input.charAt(input.length() - 4) != '.')	//the fourth position (4) from the back (-) should be '.' (e.i. '.com')
+					{
+							return false;
+					}
+					return true;
+			}//end checkEmail 
+}//end class Membership
+//Subclass Professional ==========================================================
+class Professional extends Membership implements Serializable //implement Serializable = class to be written to a file and read back 
+{
+		//declarations:
+				//object
+				String airline;
+				String firstName;
+				String lastName;
+				String licenseNumber;
+				int	   totalFlightHours;
+				String aircraftType;
+				String companyWebsite;
+				//working variable
+				String input = " ";
+		//constructors:
+				Professional()
+				{
+						super();
+						airline 		 = " ";
+						firstName 		 = " ";
+						lastName 		 = " ";
+						licenseNumber 	 = " ";
+						totalFlightHours = 0;
+						aircraftType 	 = " "; 
+						companyWebsite 	 = " ";
+				}//end constructor w/o arguments
+				Professional(String airline, String firstName, String lastName, String licenseNumber, int totalFlightHours, String aircraftType, 
+							 String companyWebsite, String id, int category, double fees, String city, String state, String phone, String email)
+				{
+						super(id, category, fees, city, state, phone, email);
+						this.airline 		  = airline;
+						this.firstName 		  = firstName;
+						this.lastName 		  = lastName;
+						this.licenseNumber 	  = licenseNumber;
+						this.totalFlightHours = totalFlightHours;
+						this.aircraftType 	  = aircraftType;
+						this.companyWebsite   = companyWebsite;
+				}//end constructor w/ arguments
+		//Input Method ========================================================== 
+				void getProfessionalData()
+				{
+						getMemberData();	//from class Membership
+						id = id + "P";		//P for professional
+						//---------------------------------------------------------------------------------------------------
+						input = JOptionPane.showInputDialog("Enter airline: ");
+								while(!checkAirline(input))
+								{
+										input   = JOptionPane.showInputDialog("Invalid! re-Enter airline: ");
+								}//end while
+								airline   	    = input;
+						//---------------------------------------------------------------------------------------------------
+						input = JOptionPane.showInputDialog("Enter first name: ");
+								while(!checkName(input))
+								{
+										input   = JOptionPane.showInputDialog("Invalid! re-Enter first name: ");
+								}//end while
+								firstName 	    = input;
+						//---------------------------------------------------------------------------------------------------
+						input = JOptionPane.showInputDialog("Enter last name: ");
+								while(!checkName(input))
+								{
+										input   = JOptionPane.showInputDialog("Invalid! re-Enter last name: ");
+								}//end while
+								lastName  	    = input;
+						//---------------------------------------------------------------------------------------------------
+						input = JOptionPane.showInputDialog("Enter professional license number: ");
+								while(!checkLicenseNumber(input))
+								{
+										input   = JOptionPane.showInputDialog("Invalid! re-Enter lincense number: ");
+								}//end while
+								licenseNumber   = input;
+						//---------------------------------------------------------------------------------------------------
+						input = JOptionPane.showInputDialog("Enter total flight Hours: ");
+								while(!checkDigit(input))
+								{
+										input    = JOptionPane.showInputDialog("Invalid! re-Enter total flight hours: ");
+								}//end while
+								totalFlightHours = Integer.parseInt(input);
+						//---------------------------------------------------------------------------------------------------
+						input = JOptionPane.showInputDialog("Enter primary aircraft type or rating: ");
+								while(!checkAplphaNumeric(input))
+								{
+										input    = JOptionPane.showInputDialog("Invalid! re-Enter aircraft type: ");
+								}//end while
+								aircraftType 	 = input;
+						//---------------------------------------------------------------------------------------------------
+						input = JOptionPane.showInputDialog("Enter company website (e.i www.company.com): ");
+								while(!checkCompanyWebsite(input))
+								{
+										input    = JOptionPane.showInputDialog("Invalid! re-Enter company website (e.i www.company.com): ");
+								}//end while
+								companyWebsite 	 = input;
+						//---------------------------------------------------------------------------------------------------
+						FeeSchedule FS 			 = new FeeSchedule(); //calling FeeSchedule in
+						setProFees(FS);			 //sets pro fee    	 
+				}//end getProfessionalData()				
+		//Display Method ==========================================================
+				void dispProfessional() 
+				{
+						dispMember();	//from class Membership
+						JOptionPane.showMessageDialog(null, "Professional Pilot Information:\n" 	   					+
+															"---------------------------------------" + "\n" +
+															"Airline: 			 " + airline   	      + "\n" +
+															"First name: 		 " + firstName 	      + "\n" + 
+															"Last name: 		 " + lastName 	      + "\n" +
+															"License number: 	 " + licenseNumber    + "\n" +
+															"Total flight hours: " + totalFlightHours + "\n" +
+															"Aircraft type:  	 " + aircraftType 	  + "\n" + 
+															"Company website: 	 " + companyWebsite   + "\n");
+				}//end dispProfessional() 
+		//Validation Method ========================================================
+				boolean checkAirline(String input)
+				{
+						if(input.isEmpty())
+						{
+								return false;
+						}//end if
+						//-------------------------------
+						for(int i = 0; i < input.length(); i++)
+						{
+								if(!Character.isLetter(input.charAt(i)) && input.charAt(i) != ' ')
+								{
+										return false;
+								}//end if not letter
+						}//for i
+						return true;
+				}//end checkAirline 
+				//--------------------------------------------
+				boolean checkName(String input)
+				{
+						if(input.isEmpty())
+						{
+								return false;
+						}//end if
+						//------------------------------- 
+						for(int i = 0; i < input.length(); i++)
+						{
+								if(!Character.isLetter(input.charAt(i)))
+								{
+										return false;
+								}//end if not letter
+						}//for i
+						return true;
+				}//end checkName
+				//--------------------------------------------
+				boolean checkLicenseNumber(String input)
+				{
+						if(input.isEmpty())
+						{
+								return false;
+						}//end if empty
+						return true;
+				}//end checkLicenseNumber
+				//--------------------------------------------
+				boolean checkDigit(String input)
+				{
+						if(input.isEmpty())
+						{
+								return false;
+						}//end if empty
+						//-------------------------------
+						for(int i = 0; i < input.length(); i++)
+						{
+								if(!Character.isDigit(input.charAt(i)))
+								{
+										return false;
+								}//end if not digit
+						}//for i
+						return true;
+				}//end checkLastName
+				//--------------------------------------------
+				boolean checkAplphaNumeric(String input)
+				{
+						if(input.isEmpty())
+						{
+								return false;
+						}//end if
+						//-------------------------------
+						for(int i = 0; i < input.length(); i++)
+						{
+								if(!Character.isLetter(input.charAt(i)) && !Character.isDigit(input.charAt(i)))
+								{
+										return false;
+								}
+						}//for i
+						return true;
+				}//end checkAplphaNumeric
+				//--------------------------------------------
+				boolean checkCompanyWebsite(String input)	//creating website rules
+				{
+						int dotCount = 0;
+						if(input.length() < 4)
+						{
+								return false;
+						}//end i
+						//-------------------------------
+						for(int i = 0; i < input.length(); i++)
+						{
+								if(!Character.isLetter(input.charAt(i)) && input.charAt(i) != '.')
+										return false;
+						}//for i
+						//-------------------------------
+						for(int i = 0; i < input.length(); i++)
+						{
+								if(input.charAt(i) == '.')
+										dotCount++;
+						}//end for i
+						//-------------------------------
+						if(dotCount != 2)
+						{
+								return false;
+						}//end if dotCount
+						//-------------------------------
+						if(input.charAt(input.length() - 4) != '.')
+						{
+								return false;
+						}//end if
+						return true;
+				}//end checkCompanyWebsite
+				//--------------------------------------------
+}//end class Professional
+//Amateur ==========================================================
+class Amateur extends Membership implements Serializable
+{
+		//declarations
+				//object
+				String firstName;
+				String lastName;
+				int    dob;				//Date of birth (MMDDYYYY)
+				String certificateType;
+				int	   totalFlightHours;
+				String airportCode;
+				//working variable
+				String input = " ";
+		//constructors
+				Amateur()
+				{
+						super();
+						firstName 		 = " ";
+						lastName 		 = " ";
+						dob 			 = 0;	 	
+						certificateType  = " ";
+						totalFlightHours = 0;
+						airportCode 	 = " ";
+				}//end constructor w/o arguments
+				Amateur(String firstName, String lastName, int dob, String certificateType, int totalFlightHours, String airportCode, String id,
+						int category, double fees, String city, String state, String phone, String email)
+				{
+						super(id, category, fees, city, state, phone, email);
+						this.firstName 		  = firstName;
+						this.lastName 		  = lastName;
+						this.dob 			  = dob;	 			
+						this.certificateType  = certificateType;
+						this.totalFlightHours = totalFlightHours;
+						this.airportCode 	  = airportCode;
+				}//end constructor w/ arguments
+		//Input Method ========================================================== 
+				void getAmateurData()
+				{
+						getMemberData();	//from class Membership
+						id = id + "A";		//A for amateur
+						//---------------------------------------------------------------------------------------------
+						input = JOptionPane.showInputDialog("Enter first name: ");
+								while(!checkLetter(input))
+								{
+										input 	 = JOptionPane.showInputDialog("Invalid! re-Enter first name: ");
+								}//end while
+								firstName 	  	 = input;
+						//---------------------------------------------------------------------------------------------
+						input = JOptionPane.showInputDialog("Enter last name: ");
+								while(!checkLetter(input))
+								{
+										input 	 = JOptionPane.showInputDialog("Invalid! re-Enter last name: ");
+								}//end while
+								lastName  	  	 = input;
+						//--------------------------------------------------------------------------------------
+						input = JOptionPane.showInputDialog("Enter Date of Birth (MMDDYYYY): ");
+								while(!checkDigits(input))
+								{
+										input 	 = JOptionPane.showInputDialog("Invalid! re-Enter Date of Birth (MMDDYYYY): ");
+								}//end while
+								dob  		  	 = Integer.parseInt(input);		
+						//---------------------------------------------------------------------------------------------
+						input = JOptionPane.showInputDialog("Enter certificate type (i.e. Student, Private): ");
+								while(!checkLetter(input))
+								{
+										input 	 = JOptionPane.showInputDialog("Invalid! re-Enter certificate type (i.e. Student, Private): ");
+								}//end while
+								certificateType  = input;
+						//---------------------------------------------------------------------------------------------
+						input = JOptionPane.showInputDialog("Enter total flight hours: ");
+								while(!checkDigits(input))
+								{
+										input 	 = JOptionPane.showInputDialog("Invalid! re-Enter total flight hours: ");
+								}//end while
+								totalFlightHours = Integer.parseInt(input);
+						//---------------------------------------------------------------------------------------------
+						input = JOptionPane.showInputDialog("Enter Airfield/Airport code: ");
+								while(!checkAplphaNumeric(input))
+								{
+										input 	 = JOptionPane.showInputDialog("Invalid! re-Enter Airfield/Airport code: ");
+								}//end while
+								airportCode 	 = input;
+						//---------------------------------------------------------------------------------------------
+						FeeSchedule FS 		 	 = new FeeSchedule();
+						setAmFees(FS);			//sets amateur fee	  
+				}//end getAmateurData()
+		// Display Method ==========================================================
+				void dispAmateur()
+				{
+						dispMember();	//from class Membership
+						JOptionPane.showMessageDialog(null, "Amateur Member:\n" 							+
+															"-------------------------------------------\n" +
+															"First name: 		   	   " + firstName 	    + "\n" + 
+															"Last name: 		   	   " + lastName 	    + "\n" +
+															"Date of Birth (MMDDYYYY): " + dob    			+ "\n" +	
+															"Certificate type: 		   " + certificateType  + "\n" +
+															"Total flight hours: 	   " + totalFlightHours + "\n" +
+															"Airport code: 			   " + airportCode 	    + "\n");
+				}//end dispAmateur
+		//Validation Method ======================================================== 
+				boolean checkLetter(String input)
+				{
+						if(input.isEmpty())
+						{
+								return false;
+						}//end if
+						//-------------------------------
+						for(int i = 0; i < input.length(); i++)
+						{
+								if(!Character.isLetter(input.charAt(i)))
+								{
+										return false;
+								}//end if not letter
+						}//for i
+						return true;
+				}//end checkName
+				//--------------------------------------------
+				boolean checkDigits(String input)
+				{
+						if(input.isEmpty())
+						{
+								return false;
+						}//end if empty
+						//-------------------------------
+						for(int i = 0; i < input.length(); i++)
+						{
+								if(!Character.isDigit(input.charAt(i)))
+								{
+										return false;
+								}//end if not digit
+						}//for i
+						return true;
+				}//end checkDigits
+				//--------------------------------------------
+				boolean checkAplphaNumeric(String input)
+				{
+						if(input.isEmpty())
+						{
+								return false;
+						}//end if
+						//-------------------------------
+						for(int i = 0; i < input.length(); i++)
+						{
+								if(!Character.isLetter(input.charAt(i)) && !Character.isDigit(input.charAt(i)))
+								{
+										return false;
+								}//end if not alphanumeric
+						}//for i
+						return true;
+				}//end checkAplphaNumeric
+}//end class Amateur
+//Additional Classes ==========================================================
+class FeeSchedule	 
+{
+		//declaration
+				//object:
+						double proLife;
+						double amLife;
+						double proRegular;
+						double amRegular;
+		//constructs
+				FeeSchedule()
+				{
+						proLife    = 120000.00;
+						amLife     = 20500.00;
+						proRegular = 10500.00;
+						amRegular  = 3500.00;
+				}//end const. w/o arguments						
+}//end class FeeSchedule
+//-------------------------------
+class USstates implements Serializable
+{
+		//declaration
+				//object:
+						String [] stateAbbr = {"AL","AK","AZ","AR","CA","CO","CT","DE",
+			                			 	   "FL","GA","GU","HI","ID","IL","IN","IA",
+			                			 	   "KS","KY","LA","ME","MD","MA","MI","MN",
+			                			 	   "MS","MO","MT","NE","NV","NH","NJ","NM",
+			                			 	   "NY","NC","ND","MP","OH","OK","OR","PA",
+			                			 	   "PR","RI","SC","SD","TN","TX","VI","UT",
+			                			 	   "VT","VA","WA","WV","WI","WY"};
+						String [] stateName = {"Alabama","Alaska","Arizona","Arkansas","California","Colorado",
+			            					  "Connecticut","Delaware","Florida","Georgia","Guam","Hawaii",
+			            					  "Idaho","Illinois","Indiana","Iowa","Kansas","Kentucky",
+			            					  "Louisiana","Maine","Maryland","Massachusetts","Michigan",
+			            					  "Minnesota","Mississippi","Missouri","Montana","Nebraska",
+			            					  "Nevada","New Hampshire","New Jersey","New Mexico","New York",
+			            					  "North Carolina","North Dakota","Northern Mariana Islands",
+			            					  "Ohio","Oklahoma","Oregon","Pennsylvania","Puerto Rico",
+			            					  "Rhode Island","South Carolina","South Dakota","Tennessee",
+			            					  "Texas","United States Virgin Islands","Utah","Vermont",
+			            					  "Virginia","Washington","West Virginia","Wisconsin","Wyoming"}; 
+			//Processes ============================================
+						String getState(String input)
+						{
+						        int i = 0;
+						        while(i < stateAbbr.length)
+						        {
+						                if(input.equalsIgnoreCase(stateAbbr[i]))
+						                {
+						                        return stateName[i] + " (" + stateAbbr[i] + ")";
+						                }//en if
+						                else if(input.equalsIgnoreCase(stateName[i]))
+						                {
+						                        return stateName[i] + " (" + stateAbbr[i] + ")";
+						                }//end else if
+						                else
+						                {
+						                        i++;
+						                }//end else
+						        }//end while
+						        return "Invalid";
+						}// end getState
+}//end USstates
